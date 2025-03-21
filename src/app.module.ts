@@ -5,6 +5,7 @@ import { ConfigModule, ConfigType } from '@nestjs/config';
 import { appConfig } from './configuration/configs/app-config';
 import { postgresConfig } from './configuration/configs/postgres-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BalanceModule } from './balance/balance.module';
 // import { LoggerMiddleware } from './utils/logger.middleware';
 
 @Module({
@@ -19,7 +20,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       }),
       inject: [postgresConfig.KEY],
     }),
-      ],
+    BalanceModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
   })
