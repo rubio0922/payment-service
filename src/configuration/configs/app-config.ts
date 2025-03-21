@@ -1,14 +1,16 @@
 import { registerAs } from '@nestjs/config';
 import { z } from 'zod';
-import * as env from 'env-var';
+import * as dotenv from 'dotenv';
 
-import * as packageJson from '../../../package.json';
+import { name } from '../../../package.json';
 import { IAppConfig } from '../interfaces/app-config.interface';
+
+dotenv.config();
 
 const envSchema = z.object({
   API_PREFIX: z.string().default('/api'),
   API_VERSION: z.string().default('/v1'),
-  SERVICE_NAME: z.string().default(packageJson.name),
+  SERVICE_NAME: z.string().default(name),
   HTTP_PORT: z.number().default(3000),
 });
 
@@ -16,10 +18,10 @@ export const appConfig = registerAs(
   'app-config',
   (): IAppConfig => {
     const envVars = {
-      API_PREFIX: env.get('API_PREFIX').default('/api').asString(),
-      API_VERSION: env.get('API_VERSION').default('/v1').asString(),
-      SERVICE_NAME: env.get('SERVICE_NAME').default(packageJson.name).asString(),
-      HTTP_PORT: env.get('HTTP_PORT').default(3000).asPortNumber(),
+      API_PREFIX: process.env.API_PREFIX || '/api',
+      API_VERSION: process.env.API_VERSION || '/v1',
+      SERVICE_NAME: process.env.SERVICE_NAME || name,
+      HTTP_PORT: process.env.HTTP_PORT ? parseInt(process.env.HTTP_PORT, 10) : 3000,
     };
 
     return envSchema.parse(envVars);
