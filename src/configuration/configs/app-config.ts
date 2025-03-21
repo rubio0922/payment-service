@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 
 import { name } from '../../../package.json';
 import { IAppConfig } from '../interfaces/app-config.interface';
+import { parseToInt } from '../../utils/parseToInt';
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const envSchema = z.object({
   API_PREFIX: z.string().default('/api'),
   API_VERSION: z.string().default('/v1'),
   SERVICE_NAME: z.string().default(name),
-  HTTP_PORT: z.string().transform((val) => parseInt(val, 10)).default('3000'),
+  HTTP_PORT: z.string().transform((val) => parseToInt(val)).default('3000'),
 });
 
 const env = envSchema.parse(process.env);

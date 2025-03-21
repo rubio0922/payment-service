@@ -3,13 +3,14 @@ import { z } from 'zod';
 import * as dotenv from 'dotenv';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { IPostgresConfig } from '../interfaces/postgres-config.interface';
+import { parseToInt } from '../../utils/parseToInt';
 
 dotenv.config();
 
 const envSchema = z.object({
   DB_TYPE: z.string().default('postgres'),
   DB_HOST: z.string(),
-  DB_PORT: z.string().transform((val) => parseInt(val, 10)).default('5432'),
+  DB_PORT: z.string().transform((val) => parseToInt(val)).default('5432'),
   DB_USERNAME: z.string(),
   DB_PASSWORD: z.string(),
   DB_DATABASE: z.string(),
