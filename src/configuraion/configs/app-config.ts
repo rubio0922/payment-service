@@ -1,19 +1,27 @@
 import { registerAs } from '@nestjs/config';
-import { envValidation } from '@sibd/backend-tools';
+import { z } from 'zod';
+import * as env from 'env-var';
 
-
-import * as name from '../../../package.json';
+import * as packageJson from '../../../package.json';
 import { IAppConfig } from '../interfaces/app-config.interface';
 
-const { env } = envValidation;
+const envSchema = z.object({
+  API_PREFIX: z.string().default('/api'),
+  API_VERSION: z.string().default('/v1'),
+  SERVICE_NAME: z.string().default(packageJson.name),
+  HTTP_PORT: z.number().default(3000),
+});
 
 export const appConfig = registerAs(
   'app-config',
-  (): IAppConfig => ({
-    API_PREFIX: env.get('API_PREFIX').default('/api').validatedValue,
-    API_VERSION: env.get('API_VERSION').default('/v1').validatedValue,
-    SERVICE_NAME: env.get('SERVICE_NAME').default(name).validatedValue,
-    HTTP_PORT: env.get('HTTP_PORT').port().default(3000).validatedValue,
-    AUTH_HEADER_SECRET: env.get('AUTH_HEADER_SECRET').required().validatedValue,
-  }),
+  (): IAppConfig => {
+    const envVars = {
+      API_PREFIX: env.get('API_PREFIX').default('/api').asString(),
+      API_VERSION: env.get('API_VERSION').default('/v1').asString(),
+      SERVICE_NAME: env.get('SERVICE_NAME').default(packageJson.name).asString(),
+      HTTP_PORT: env.get('HTTP_PORT').default(3000).asPortNumber(),
+    };
+
+    return envSchema.parse(envVars);
+  },
 );
