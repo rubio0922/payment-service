@@ -1,5 +1,4 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { v7 as uuidv7 } from 'uuid';
+import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 import { bigintTransformer } from '../../utils/orm.utils';
 import { IBalance } from '../interfaces/balance.interface';
@@ -25,9 +24,4 @@ export class Balance implements IBalance {
 
   @UpdateDateColumn({ type: 'timestamp without time zone' })
   updatedAt: Date;
-
-  @BeforeInsert()
-  generateId() {
-    this.id = uuidv7();
-  }
 }

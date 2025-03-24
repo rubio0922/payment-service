@@ -3,5 +3,6 @@ export interface IAppConfig {
     API_VERSION: string;
     SERVICE_NAME: string;
     API_PREFIX: string;
+    AUTH_HEADER_SECRET: string;
 }
   

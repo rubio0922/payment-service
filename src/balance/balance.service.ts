@@ -1,4 +1,5 @@
 import { Injectable, Logger, LoggerService, NotFoundException } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
 
 import { BalanceProvider } from './balance.provider';
 import { Balance } from './entities/balance.entity';
@@ -16,7 +17,9 @@ export class BalanceService {
 
       await this.isExist(balance.id);
 
-      await this.balanceProvider.create(balance);
+      const id = uuidv7();
+
+      await this.balanceProvider.create({...balance, id });
 
       this.logger.log(`Balance created successfully`);
     }

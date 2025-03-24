@@ -1,12 +1,11 @@
-import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { appConfig } from './configuration/configs/app-config';
 import { postgresConfig } from './configuration/configs/postgres-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BalanceModule } from './balance/balance.module';
-// import { LoggerMiddleware } from './utils/logger.middleware';
+import { RequestIdMiddleware } from './utils/requestId.middleware';
+import { BalanceApiModule } from './api/balance-api.module';
 
 @Module({
   imports: [
@@ -21,8 +20,11 @@ import { BalanceModule } from './balance/balance.module';
       inject: [postgresConfig.KEY],
     }),
     BalanceModule,
+    BalanceApiModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
-  })
-export class AppModule {}
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestIdMiddleware).forRoutes('*');
+  }
+}
