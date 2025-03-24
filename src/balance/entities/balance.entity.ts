@@ -20,9 +20,6 @@ export class Balance implements IBalance {
   })
   userId: number;
 
-  @Column({ nullable: false })
-  points: number;
-
   @CreateDateColumn({ type: 'timestamp without time zone' })
   createdAt: Date;
 

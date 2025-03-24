@@ -10,15 +10,16 @@ dotenv.config();
 const envSchema = z.object({
   DB_TYPE: z.string().default('postgres'),
   DB_HOST: z.string(),
-  DB_PORT: z.string().transform((val) => parseToInt(val)).default('5432'),
+  DB_PORT: z.string().transform(parseToInt).default('5432'),
   DB_USERNAME: z.string(),
   DB_PASSWORD: z.string(),
   DB_DATABASE: z.string(),
-  DB_AUTO_LOAD_ENTITIES: z.string().transform((val) => val === 'true').default('true'),
-  DB_SYNCHRONIZE: z.string().transform((val) => val === 'true').default('false'),
+  DB_AUTO_LOAD_ENTITIES: z.preprocess((val) => val === 'true', z.boolean().default(true)),
+  DB_SYNCHRONIZE: z.preprocess((val) => val === 'true', z.boolean().default(false)),
 });
 
 const env = envSchema.parse(process.env);
+
 
 export const postgresConfig = registerAs(
   'postgres-config',

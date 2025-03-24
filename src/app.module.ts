@@ -17,6 +17,7 @@ import { BalanceModule } from './balance/balance.module';
     TypeOrmModule.forRootAsync({
       useFactory: async (postgresConfigToken: ConfigType<typeof postgresConfig>) => ({
         ...postgresConfigToken,
+        logging: true,
       }),
       inject: [postgresConfig.KEY],
     }),

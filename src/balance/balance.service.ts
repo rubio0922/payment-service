@@ -34,9 +34,11 @@ export class BalanceService {
     async findOne(id: string): Promise<Balance> {
       this.logger.log(`Finding balance with id: ${id}`);
 
-      await this.isExist(id);
-
       const balance = await this.balanceProvider.findOne(id);
+
+      if(!balance) {
+        throw new NotFoundException(`No balance with id - ${id}`)
+      }
 
       return balance;
     }
